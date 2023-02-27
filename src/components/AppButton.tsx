@@ -6,14 +6,16 @@ import Colors from '../utils/Colors';
 interface Props {
     text: string;
     onPress?: any;
+    style?: any;
+    textStyle?: any
 }
 
 /** AppButton */
 export const AppButton = (props: Props) => {
     return (
         <View style={styles.container}>
-        <TouchableOpacity onPress={props.onPress} style={styles.appButtonContainer}>
-            <Text style={styles.appButtonText}>{props.text}</Text>
+        <TouchableOpacity onPress={props.onPress} style={[styles.appButtonContainer,[props.style]]}>
+            <Text style={[styles.appButtonText, [props.textStyle]]}>{props.text}</Text>
         </TouchableOpacity>
      </View>
     )

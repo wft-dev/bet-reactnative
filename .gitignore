@@ -110,3 +110,5 @@ yarn.lock
 
 # Stack Dumps generated when programs crash (Ex. bash.exe.stackdump on Win)
 *.stackdump
+
+.env

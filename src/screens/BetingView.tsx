@@ -1,44 +1,82 @@
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, Pressable, FlatList, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { HomeScreenNavigationProp } from '../navigation/types';
+import { AddBettingNavigationProp } from '../navigation/types';
 import { Colors, Images } from '../utils';
 import { BettingData } from '../constants'
+import AppButton from '../components/AppButton';
+import { AppButtonNames } from '../constants';
+import EventSource, { EventSourceListener } from "react-native-sse";
 
 /** Beting Screen */
 const BetingView = () => {
-  const navigation = useNavigation<HomeScreenNavigationProp>();
+  const [bettings, setBettings] = useState<BettingData[]>([]);
+  const navigation = useNavigation<AddBettingNavigationProp>();
+
+  // get odds
+  useEffect(() => {
+    const es = new EventSource("<APIBaseURL>/getOdds");
+    const listener: EventSourceListener = (event) => {
+      if (event.type === "open") {
+        console.log("Open SSE connection.");
+      } else if (event.type === "message") {
+        const bettingData = JSON.parse(event.data) as BettingData;
+        setBettings((prevBettings) => [...prevBettings, bettingData]);
+      } else if (event.type === "error") {
+        console.error("Connection error:", event.message);
+      } else if (event.type === "exception") {
+        console.error("Error:", event.message, event.error);
+      }
+    };
+    es.addEventListener("open", listener);
+    es.addEventListener("message", listener);
+    es.addEventListener("error", listener);
+    return () => {
+      es.removeAllEventListeners();
+      es.close();
+    };
+  }, []);
+
 
   // list of betting cars with name and beting value 
-  const renderListItems = ({ item }) => {
+  const renderListItems = ({ item }: any) => {
     return (
-      <Pressable
-        style={styles.carContainer}
-        onPress={() =>
-          navigation.goBack()
-        }
-      >
-        <View>
-          <Image
-            source={Images.carImg}
-            style={styles.carImage}
-          />
-        </View>
-        <View style={styles.carSubContainer}>
-          <Text style={styles.carText}>
-            {item.name}
-          </Text>
-          <Text style={styles.valueText}>
-            {item.value}
-          </Text>
-        </View>
-      </Pressable>
+      <>
+        {item.carName ?
+          <Pressable
+            style={styles.carContainer}
+            onPress={() => {}
+            }
+          >
+            <View>
+              <Image
+                source={Images.carImg}
+                style={styles.carImage}
+              />
+            </View>
+            <View style={styles.carSubContainer}>
+              <Text style={styles.carText}>
+                {item.carName ?? ""}
+              </Text>
+              <Text style={styles.valueText}>
+                {item.betPrice ?? ""}
+              </Text>
+            </View>
+          </Pressable> :
+          null}
+      </>
     );
   };
 
   return (
     <View style={styles.container}>
+      <View style={styles.headerContainer}>
+        <AppButton style={styles.backAddbtn} textStyle={styles.backAddText} text={AppButtonNames.back} onPress={() => { navigation.goBack()}} />
+        <AppButton style={styles.backAddbtn} textStyle={styles.backAddText}text={AppButtonNames.addBetting} onPress={() => { navigation.navigate("AddBetting",{})
+ }} />
+      </View>
       <Text style={styles.demoText}>The Demo Race</Text>
-      <FlatList data={BettingData} renderItem={renderListItems} />
+      <FlatList data={bettings} renderItem={renderListItems} />
     </View>
   );
 };
@@ -48,6 +86,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent:'space-between'
+  },
+  backAddbtn:{
+    backgroundColor: Colors.White,
+    borderColor:Colors.White,
+    borderWidth:0
+  },
+  backAddText:{
+    color: Colors.Blue,
+  },
   carContainer: {
     flex: 1,
     padding: 10,
@@ -56,12 +106,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     flexDirection: 'row',
-    alignContent:'center'
+    alignContent: 'center'
   },
   carSubContainer: {
     flex: 1,
     flexDirection: 'column',
-    justifyContent:'center',
+    justifyContent: 'center',
     marginLeft: 10,
   },
   carImage: {
@@ -73,7 +123,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 2,
     fontSize: 45,
     fontWeight: '700',
-    textAlign:'center',
+    textAlign: 'center',
     color: Colors.DarkGray
   },
   carText: {

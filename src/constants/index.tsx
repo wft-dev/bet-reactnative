@@ -1,2 +1,3 @@
 import {AppButtonNames, BettingData} from './AppData';
-export { AppButtonNames, BettingData};
+export { AppButtonNames };
+export type { BettingData };
