@@ -6,34 +6,30 @@ import { Colors, Images } from '../utils';
 import { BettingData } from '../constants'
 import AppButton from '../components/AppButton';
 import { AppButtonNames } from '../constants';
-import EventSource, { EventSourceListener } from "react-native-sse";
+import { EventSourceManger } from '../AppManger';
+import { EventSourceListener } from "react-native-sse";
+import { API_URL } from "@env"
 
 /** Beting Screen */
 const BetingView = () => {
   const [bettings, setBettings] = useState<BettingData[]>([]);
   const navigation = useNavigation<AddBettingNavigationProp>();
 
-  // get odds
+  // get oddsAPI_URL
   useEffect(() => {
-    const es = new EventSource("<APIBaseURL>/getOdds");
+    EventSourceManger.init(`${API_URL}/getOdds`);
     const listener: EventSourceListener = (event) => {
       if (event.type === "open") {
-        console.log("Open SSE connection.");
+        console.log("Open SSE connection.")
       } else if (event.type === "message") {
-        const bettingData = JSON.parse(event.data) as BettingData;
+        const bettingData = JSON.parse(event.data ?? '') as BettingData;
         setBettings((prevBettings) => [...prevBettings, bettingData]);
-      } else if (event.type === "error") {
-        console.error("Connection error:", event.message);
-      } else if (event.type === "exception") {
-        console.error("Error:", event.message, event.error);
       }
     };
-    es.addEventListener("open", listener);
-    es.addEventListener("message", listener);
-    es.addEventListener("error", listener);
+    EventSourceManger.getListerner(listener)
     return () => {
-      es.removeAllEventListeners();
-      es.close();
+      EventSourceManger.onRemoveAllEventListeners();
+      EventSourceManger.close();
     };
   }, []);
 
@@ -45,7 +41,7 @@ const BetingView = () => {
         {item.carName ?
           <Pressable
             style={styles.carContainer}
-            onPress={() => {}
+            onPress={() => { }
             }
           >
             <View>
@@ -71,9 +67,10 @@ const BetingView = () => {
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
-        <AppButton style={styles.backAddbtn} textStyle={styles.backAddText} text={AppButtonNames.back} onPress={() => { navigation.goBack()}} />
-        <AppButton style={styles.backAddbtn} textStyle={styles.backAddText}text={AppButtonNames.addBetting} onPress={() => { navigation.navigate("AddBetting",{})
- }} />
+        <AppButton style={styles.backAddbtn} textStyle={styles.backAddText} text={AppButtonNames.back} onPress={() => { navigation.goBack() }} />
+        <AppButton style={styles.backAddbtn} textStyle={styles.backAddText} text={AppButtonNames.addBetting} onPress={() => {
+          navigation.navigate("AddBetting", {})
+        }} />
       </View>
       <Text style={styles.demoText}>The Demo Race</Text>
       <FlatList data={bettings} renderItem={renderListItems} />
@@ -88,14 +85,14 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     flexDirection: 'row',
-    justifyContent:'space-between'
+    justifyContent: 'space-between'
   },
-  backAddbtn:{
+  backAddbtn: {
     backgroundColor: Colors.White,
-    borderColor:Colors.White,
-    borderWidth:0
+    borderColor: Colors.White,
+    borderWidth: 0
   },
-  backAddText:{
+  backAddText: {
     color: Colors.Blue,
   },
   carContainer: {

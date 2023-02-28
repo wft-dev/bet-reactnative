@@ -4,7 +4,7 @@ import { HomeScreenNavigationProp } from '../navigation/types';
 import AppButton from '../components/AppButton';
 import { AppButtonNames } from '../constants';
 import { Colors } from '../utils';
-
+import {EventSourceManger} from '../AppManger';
 
 /** Home Screen */
 const HomeScreen = () => {
@@ -15,10 +15,16 @@ const HomeScreen = () => {
     navigation.navigate("Beting")
   }
 
+  // close event source connection on deactive 
+  const closeEventSourceConnection =() =>{
+      EventSourceManger.closeRemoveConection();
+    }
+
+
   return (
     <View style={styles.container}>
       <AppButton text={AppButtonNames.activateDevice} onPress={() => { }} />
-      <AppButton text={AppButtonNames.dectivateDevice} onPress={() => { }} />
+      <AppButton text={AppButtonNames.dectivateDevice} onPress={() => {closeEventSourceConnection() }} />
       <AppButton text={AppButtonNames.bettingView} onPress={() => appButtonOnPress()} />
       <Text style={styles.connectionText}>Connection state changed to : connecting</Text>
       <Text style={styles.connectionText}>Connection state changed to : connected</Text>
