@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, TextInput, Alert , Keyboard, TouchableWithoutFeedback} from 'react-native';
+import { StyleSheet, View, Text, TextInput, Alert, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { HomeScreenNavigationProp } from '../navigation/types';
 import { AppButton, AppIndicator } from '../components';
 import { AppButtonNames } from '../constants';
-import { Colors } from '../utils';
+import { Colors, ShowAlert } from '../utils';
 import { ApiMethod, ApiRoot, ApiParameters } from '../appManger';
 import { API_URL } from "@env"
 import uuid from 'react-native-uuid';
@@ -25,9 +25,23 @@ const AddBetting = () => {
       },
     ]);
 
+  // alert message for validation
+  const validation = () => {
+    if (!carName) {
+      Alert.alert('Alert', 'Car Name is required.');
+      return true
+    } else if (!betPrice) {
+       Alert.alert('Alert', 'Bet Price is required.');
+       return true
+    } 
+    return false
+  }
   // call make bet api
   const makeBetApi = async () => {
     Keyboard.dismiss()
+    if (validation()) {
+      return
+    }
     setIsLoding(true)
     try {
       const obj = { [ApiParameters.carName]: carName, [ApiParameters.betPrice]: betPrice }
@@ -50,29 +64,29 @@ const AddBetting = () => {
 
   return (
     <>
-      {isLoading ? 
-      <AppIndicator loading={isLoading} /> : null}
+      {isLoading ?
+        <AppIndicator loading={isLoading} /> : null}
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <View style={styles.container}>
-        <View style={styles.headerContainer}>
-          <AppButton style={styles.backAddbtn} textStyle={styles.backAddText} text={AppButtonNames.back} onPress={() => { navigation.goBack() }} />
+        <View style={styles.container}>
+          <View style={styles.headerContainer}>
+            <AppButton style={styles.backAddbtn} textStyle={styles.backAddText} text={AppButtonNames.back} onPress={() => { navigation.goBack() }} />
+          </View>
+          <Text style={styles.addBettingText}>Add Betting</Text>
+          <TextInput
+            style={styles.input}
+            onChangeText={onChangeCarName}
+            placeholder="Enter Car Name"
+            value={carName}
+          />
+          <TextInput
+            style={styles.input}
+            onChangeText={onChangeBetPrice}
+            value={betPrice}
+            placeholder="Enter Bet Price"
+            keyboardType="numeric"
+          />
+          <AppButton text={AppButtonNames.save} onPress={() => makeBetApi()} />
         </View>
-        <Text style={styles.addBettingText}>Add Betting</Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={onChangeCarName}
-          placeholder="Enter Car Name"
-          value={carName}
-        />
-        <TextInput
-          style={styles.input}
-          onChangeText={onChangeBetPrice}
-          value={betPrice}
-          placeholder="Enter Bet Price"
-          keyboardType="numeric"
-        />
-        <AppButton text={AppButtonNames.save} onPress={() => makeBetApi()} />
-      </View>
       </TouchableWithoutFeedback>
     </>
   );
