@@ -1,11 +1,11 @@
-import EventSource, { EventSourceListener } from "react-native-sse";
+import EventSource, { EventSourceListener, EventSourceOptions } from "react-native-sse";
 
 export class EventSourceManger {
     static eventSource?: EventSource | null;
 
     // initilaize eventSource with url
-    static init(url: string) {
-        this.eventSource = new EventSource(url)
+    static init(url: URL | string, options?:EventSourceOptions) {
+        this.eventSource = new EventSource(url, options)
     }
 
     // add all events and retutn handler

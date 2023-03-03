@@ -1,10 +1,10 @@
 import { StyleSheet, View, Text, Pressable, FlatList, BackHandler } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { HomeScreenNavigationProp } from '../navigation/types';
-import AppButton from '../components/AppButton';
+import { AppButton } from '../components';
 import { AppButtonNames } from '../constants';
 import { Colors } from '../utils';
-import {EventSourceManger} from '../AppManger';
+import { EventSourceManger } from '../appManger';
 
 /** Home Screen */
 const HomeScreen = () => {
@@ -15,16 +15,15 @@ const HomeScreen = () => {
     navigation.navigate("Beting")
   }
 
-  // close event source connection on deactive 
-  const closeEventSourceConnection =() =>{
-      EventSourceManger.closeRemoveConection();
-    }
-
+  // close eventSource connection on deactive 
+  const closeEventSourceConnection = () => {
+    EventSourceManger.closeRemoveConection();
+  }
 
   return (
     <View style={styles.container}>
       <AppButton text={AppButtonNames.activateDevice} onPress={() => { }} />
-      <AppButton text={AppButtonNames.dectivateDevice} onPress={() => {closeEventSourceConnection() }} />
+      <AppButton text={AppButtonNames.dectivateDevice} onPress={() => { closeEventSourceConnection() }} />
       <AppButton text={AppButtonNames.bettingView} onPress={() => appButtonOnPress()} />
       <Text style={styles.connectionText}>Connection state changed to : connecting</Text>
       <Text style={styles.connectionText}>Connection state changed to : connected</Text>

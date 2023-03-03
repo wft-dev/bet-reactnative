@@ -1,2 +1,4 @@
 import {EventSourceManger} from './EventSourceManger';
-export { EventSourceManger };
+import {ApiHeaders, ApiParameters, ApiRoot, ApiMethod} from './ApiManger';
+
+export  { ApiHeaders, ApiParameters, ApiRoot, ApiMethod, EventSourceManger};

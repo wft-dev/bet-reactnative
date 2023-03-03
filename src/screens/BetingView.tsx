@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, Pressable, FlatList, Image } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { StyleSheet, View, Text, Pressable, FlatList, Image, AppState, AppStateStatus, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { AddBettingNavigationProp } from '../navigation/types';
 import { Colors, Images } from '../utils';
 import { BettingData } from '../constants'
-import AppButton from '../components/AppButton';
+import { AppButton } from '../components';
 import { AppButtonNames } from '../constants';
-import { EventSourceManger } from '../AppManger';
+import { EventSourceManger, ApiRoot } from '../appManger';
 import { EventSourceListener } from "react-native-sse";
 import { API_URL } from "@env"
 
@@ -14,25 +14,72 @@ import { API_URL } from "@env"
 const BetingView = () => {
   const [bettings, setBettings] = useState<BettingData[]>([]);
   const navigation = useNavigation<AddBettingNavigationProp>();
+  const appState = useRef(AppState.currentState);
+  // const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
-  // get oddsAPI_URL
+  // start eventSource and appState 
   useEffect(() => {
-    EventSourceManger.init(`${API_URL}/getOdds`);
-    const listener: EventSourceListener = (event) => {
-      if (event.type === "open") {
-        console.log("Open SSE connection.")
-      } else if (event.type === "message") {
-        const bettingData = JSON.parse(event.data ?? '') as BettingData;
-        setBettings((prevBettings) => [...prevBettings, bettingData]);
-      }
-    };
-    EventSourceManger.getListerner(listener)
+    const subscription = AppState.addEventListener('change', handler)
+    startEventSource()
     return () => {
-      EventSourceManger.onRemoveAllEventListeners();
-      EventSourceManger.close();
+      endEventSource()
+      subscription.remove();
     };
   }, []);
 
+  // appState handler
+  const handler = async (nextAppState: AppStateStatus) => {
+    if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
+      startEventSource()
+    }
+    if (appState.current.match(/active/) && nextAppState === 'inactive') {
+      endEventSource()
+    }
+    appState.current = nextAppState;
+    // setAppStateVisible(appState.current);
+  }
+
+  // get odds api from eventSource and start eventSource
+  const startEventSource = () => {
+    EventSourceManger.init(`${API_URL}${ApiRoot.getOdds}`);
+    const listener: EventSourceListener = (event) => {
+      if (event.type === "open") {
+        //console.log("Open SSE connection.", event)
+      } else if (event.type === "message") {
+        const bettingData = JSON.parse(event.data ?? '') as BettingData;
+        //console.log("message", event, Platform.OS);
+        setBettingDataFromEvent(bettingData)
+      }
+      else if (event.type === "close") {
+        //console.log("close SSE connection.")
+      }
+    };
+    EventSourceManger.getListerner(listener)
+  }
+
+  // end eventSource
+  const endEventSource = () => {
+    EventSourceManger.onRemoveAllEventListeners();
+    EventSourceManger.close();
+  }
+
+  // set betting data form message event 
+  const setBettingDataFromEvent = (bettingData: BettingData) => {
+    setBettings((pervBettig) => {
+      const isCarName = pervBettig.some((itemBet) => itemBet.carName === bettingData.carName)
+      if (isCarName) {
+        const betArray = pervBettig.map(item => {
+          if (item.carName === bettingData.carName) {
+            return { ...item, betPrice: bettingData.betPrice };
+          } else {
+            return item;
+          }
+        })
+        return betArray
+      }
+      return [...pervBettig, bettingData]
+    });
+  }
 
   // list of betting cars with name and beting value 
   const renderListItems = ({ item }: any) => {
@@ -139,6 +186,5 @@ const styles = StyleSheet.create({
     color: Colors.DarkGray
   },
 });
-
 
 export default BetingView;

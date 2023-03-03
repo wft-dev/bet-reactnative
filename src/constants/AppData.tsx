@@ -11,6 +11,6 @@ export const  AppButtonNames = {
 
 /** This betting data use in the betting view */
 export interface BettingData {
-  carName: number;
-  betPrice: any;
+  carName: string;
+  betPrice: number;
 }
