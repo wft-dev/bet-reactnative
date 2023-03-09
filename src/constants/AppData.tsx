@@ -9,7 +9,7 @@ export const  AppButtonNames = {
   save: "Save"
 }
 
-/** AppButtonNames use for AppButton text */
+/** AppAlertText use for Alert text */
 export const  AppAlertText = {
   makeBetMesaage : "bet is made successfully",
   carNameMessage : "Car Name is required.",
@@ -19,7 +19,7 @@ export const  AppAlertText = {
   okButtonText : "OK",
 }
 
-/** AppButtonNames use for AppButton text */
+/** AppText use for app screen title, placehoder text */
 export const  AppText = {
   demodRaceText : "The Demo Race",
   makeBetText : "Make Bet",
