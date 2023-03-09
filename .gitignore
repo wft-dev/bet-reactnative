@@ -70,9 +70,9 @@ yarn.lock
 
 
 # iOS / CocoaPods
-/template/ios/build/
-/template/ios/Pods/
-/template/ios/Podfile.lock
+/ios/build/
+/ios/Pods/
+/ios/Podfile.lock
 /packages/rn-tester/Gemfile.lock
 
 # Ignore RNTester specific Pods, but keep the __offline_mirrors__ here.

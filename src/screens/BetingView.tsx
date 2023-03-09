@@ -1,11 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { StyleSheet, View, Text, Pressable, FlatList, Image, AppState, AppStateStatus, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { AddBettingNavigationProp } from '../navigation/types';
+import { MakeBetNavigationProp } from '../navigation/types';
 import { Colors, Images } from '../utils';
-import { BettingData } from '../constants'
 import { AppButton } from '../components';
-import { AppButtonNames } from '../constants';
+import { AppButtonNames, BettingData, AppText } from '../constants';
 import { EventSourceManger, ApiRoot } from '../appManger';
 import { EventSourceListener } from "react-native-sse";
 import { API_URL } from "@env"
@@ -13,7 +12,7 @@ import { API_URL } from "@env"
 /** Beting Screen */
 const BetingView = () => {
   const [bettings, setBettings] = useState<BettingData[]>([]);
-  const navigation = useNavigation<AddBettingNavigationProp>();
+  const navigation = useNavigation<MakeBetNavigationProp>();
   const appState = useRef(AppState.currentState);
   // const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
@@ -46,7 +45,7 @@ const BetingView = () => {
       if (event.type === "open") {
         //console.log("Open SSE connection.", event)
       } else if (event.type === "message") {
-        const bettingData = JSON.parse(event.data ?? '') as BettingData;
+        const bettingData = JSON.parse(event.data ?? '') as BettingData
         //console.log("message", event, Platform.OS);
         setBettingDataFromEvent(bettingData)
       }
@@ -115,11 +114,11 @@ const BetingView = () => {
     <View style={styles.container}>
       <View style={styles.headerContainer}>
         <AppButton style={styles.backAddbtn} textStyle={styles.backAddText} text={AppButtonNames.back} onPress={() => { navigation.goBack() }} />
-        <AppButton style={styles.backAddbtn} textStyle={styles.backAddText} text={AppButtonNames.addBetting} onPress={() => {
-          navigation.navigate("AddBetting", {})
+        <AppButton style={styles.backAddbtn} textStyle={styles.backAddText} text={AppButtonNames.makeBet} onPress={() => {
+          navigation.navigate("MakeBet", {})
         }} />
       </View>
-      <Text style={styles.demoText}>The Demo Race</Text>
+      <Text style={styles.demoText}>{AppText.demodRaceText}</Text>
       <FlatList data={bettings} renderItem={renderListItems} />
     </View>
   );
@@ -181,7 +180,7 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
     paddingVertical: 1,
     paddingHorizontal: 2,
-    fontSize: 13,
+    fontSize: 20,
     fontWeight: '600',
     color: Colors.DarkGray
   },

@@ -47,6 +47,11 @@ export class EventSourceManger {
         this.eventSource?.close();
     }
 
+     // open eventsource
+     static open() {
+        this.eventSource?.open();
+    }
+
     // remove all listeners 
     static onRemoveAllEventListeners() {
         this.eventSource?.removeAllEventListeners();

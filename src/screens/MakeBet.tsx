@@ -3,15 +3,15 @@ import { StyleSheet, View, Text, TextInput, Alert, Keyboard, TouchableWithoutFee
 import { useNavigation } from '@react-navigation/native';
 import { HomeScreenNavigationProp } from '../navigation/types';
 import { AppButton, AppIndicator } from '../components';
-import { AppButtonNames } from '../constants';
-import { Colors, ShowAlert } from '../utils';
+import { AppButtonNames, AppAlertText, AppText } from '../constants';
+import { Colors } from '../utils';
 import { ApiMethod, ApiRoot, ApiParameters } from '../appManger';
 import { API_URL } from "@env"
 import uuid from 'react-native-uuid';
 import axios from 'axios';
 
-/** Add Betting Screen */
-const AddBetting = () => {
+/** Make Betting Screen */
+const MakeBet = () => {
   const navigation = useNavigation<HomeScreenNavigationProp>();
   const [carName, onChangeCarName] = useState('');
   const [betPrice, onChangeBetPrice] = useState('');
@@ -19,21 +19,21 @@ const AddBetting = () => {
 
   // alert message for betting success
   const addBettingAlert = () =>
-    Alert.alert('Bet', 'betting is added successfully', [
+    Alert.alert(AppAlertText.betTitle, AppAlertText.makeBetMesaage, [
       {
-        text: 'OK', onPress: () => navigation.goBack()
+        text: AppAlertText.okButtonText, onPress: () => { }
       },
     ]);
 
   // alert message for validation
   const validation = () => {
     if (!carName) {
-      Alert.alert('Alert', 'Car Name is required.');
+      Alert.alert(AppAlertText.alertTitle, AppAlertText.carNameMessage);
       return true
     } else if (!betPrice) {
-       Alert.alert('Alert', 'Bet Price is required.');
-       return true
-    } 
+      Alert.alert(AppAlertText.alertTitle, AppAlertText.betPriceMessage);
+      return true
+    }
     return false
   }
   // call make bet api
@@ -71,18 +71,18 @@ const AddBetting = () => {
           <View style={styles.headerContainer}>
             <AppButton style={styles.backAddbtn} textStyle={styles.backAddText} text={AppButtonNames.back} onPress={() => { navigation.goBack() }} />
           </View>
-          <Text style={styles.addBettingText}>Add Betting</Text>
+          <Text style={styles.addBettingText}>{AppText.makeBetText}</Text>
           <TextInput
             style={styles.input}
             onChangeText={onChangeCarName}
-            placeholder="Enter Car Name"
+            placeholder={AppText.carNameText}
             value={carName}
           />
           <TextInput
             style={styles.input}
             onChangeText={onChangeBetPrice}
             value={betPrice}
-            placeholder="Enter Bet Price"
+            placeholder={AppText.betPriceText}
             keyboardType="numeric"
           />
           <AppButton text={AppButtonNames.save} onPress={() => makeBetApi()} />
@@ -127,4 +127,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default AddBetting;
+export default MakeBet;

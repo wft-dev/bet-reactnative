@@ -1,3 +1,3 @@
-import {AppButtonNames, BettingData} from './AppData';
-export { AppButtonNames };
+import {AppButtonNames, AppAlertText, AppText, BettingData} from './AppData';
+export { AppButtonNames, AppAlertText, AppText};
 export type { BettingData };
