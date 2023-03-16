@@ -5,12 +5,12 @@ import { MakeBetNavigationProp } from '../navigation/types';
 import { Colors, Images } from '../utils';
 import { AppButton } from '../components';
 import { AppButtonNames, BettingData, AppText } from '../constants';
-import { EventSourceManger, ApiRoot } from '../appManger';
+import { EventSourceManager, ApiRoot } from '../AppManager';
 import { EventSourceListener } from "react-native-sse";
 import { API_URL } from "@env"
 
-/** Beting Screen */
-const BetingView = () => {
+/** BettingView Screen */
+const BettingView = () => {
   const [bettings, setBettings] = useState<BettingData[]>([]);
   const navigation = useNavigation<MakeBetNavigationProp>();
   const appState = useRef(AppState.currentState);
@@ -40,7 +40,7 @@ const BetingView = () => {
 
   // get odds api from eventSource and start eventSource
   const startEventSource = () => {
-    EventSourceManger.init(`${API_URL}${ApiRoot.getOdds}`);
+    EventSourceManager.init(`${API_URL}${ApiRoot.getOdds}`);
     const listener: EventSourceListener = (event) => {
       if (event.type === "open") {
         //console.log("Open SSE connection.", event)
@@ -53,21 +53,21 @@ const BetingView = () => {
         //console.log("close SSE connection.")
       }
     };
-    EventSourceManger.getListerner(listener)
+    EventSourceManager.getListener(listener)
   }
 
   // end eventSource
   const endEventSource = () => {
-    EventSourceManger.onRemoveAllEventListeners();
-    EventSourceManger.close();
+    EventSourceManager.onRemoveAllEventListeners();
+    EventSourceManager.close();
   }
 
-  // set betting data form message event 
+  // set betting data from message event 
   const setBettingDataFromEvent = (bettingData: BettingData) => {
-    setBettings((pervBettig) => {
-      const isCarName = pervBettig.some((itemBet) => itemBet.carName === bettingData.carName)
+    setBettings((pervBetting) => {
+      const isCarName = pervBetting.some((itemBet) => itemBet.carName === bettingData.carName)
       if (isCarName) {
-        const betArray = pervBettig.map(item => {
+        const betArray = pervBetting.map(item => {
           if (item.carName === bettingData.carName) {
             return { ...item, betPrice: bettingData.betPrice };
           } else {
@@ -76,11 +76,11 @@ const BetingView = () => {
         })
         return betArray
       }
-      return [...pervBettig, bettingData]
+      return [...pervBetting, bettingData]
     });
   }
 
-  // list of betting cars with name and beting value 
+  // list of betting cars with name and betting value 
   const renderListItems = ({ item }: any) => {
     return (
       <>
@@ -118,7 +118,7 @@ const BetingView = () => {
           navigation.navigate("MakeBet", {})
         }} />
       </View>
-      <Text style={styles.demoText}>{AppText.demodRaceText}</Text>
+      <Text style={styles.demoText}>{AppText.demoRaceText}</Text>
       <FlatList data={bettings} renderItem={renderListItems} />
     </View>
   );
@@ -186,4 +186,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BetingView;
+export default BettingView;

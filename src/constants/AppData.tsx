@@ -19,9 +19,9 @@ export const  AppAlertText = {
   okButtonText : "OK",
 }
 
-/** AppText use for app screen title, placehoder text */
+/** AppText use for app screen title, placeholder text */
 export const  AppText = {
-  demodRaceText : "The Demo Race",
+  demoRaceText : "The Demo Race",
   makeBetText : "Make Bet",
   carNameText : "Enter Car Name",
   betPriceText : "Enter Bet Price"

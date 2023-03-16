@@ -7,22 +7,22 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 /** navigation parameters list use for passing the values with navigation */
 export type HomeStackNavigatorParamList = {
   Home: undefined;
-  Beting: undefined;
+  Betting: undefined;
   MakeBet:undefined
 };
 
 /** home screen set navigation prop */
 export type HomeScreenNavigationProp = NavigationProp<
-  NativeStackNavigationProp<HomeStackNavigatorParamList, 'Beting'>
+  NativeStackNavigationProp<HomeStackNavigatorParamList, 'Betting'>
 >;
 
 /** betting screen set route prop */
-export type BetingScreenRouteProp = RouteProp<
+export type BettingScreenRouteProp = RouteProp<
   HomeStackNavigatorParamList,
-  'Beting'
+  'Betting'
 >;
 
 /** add betting screen set navigation prop */
 export type MakeBetNavigationProp = NavigationProp<
-  NativeStackNavigationProp<HomeStackNavigatorParamList, 'Beting'>
+  NativeStackNavigationProp<HomeStackNavigatorParamList, 'Betting'>
 >;

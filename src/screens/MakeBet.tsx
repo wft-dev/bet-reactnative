@@ -5,7 +5,7 @@ import { HomeScreenNavigationProp } from '../navigation/types';
 import { AppButton, AppIndicator } from '../components';
 import { AppButtonNames, AppAlertText, AppText } from '../constants';
 import { Colors } from '../utils';
-import { ApiMethod, ApiRoot, ApiParameters } from '../appManger';
+import { ApiMethod, ApiRoot, ApiParameters } from '../AppManager';
 import { API_URL } from "@env"
 import uuid from 'react-native-uuid';
 import axios from 'axios';

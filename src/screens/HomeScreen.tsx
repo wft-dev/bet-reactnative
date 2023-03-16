@@ -4,20 +4,20 @@ import { HomeScreenNavigationProp } from '../navigation/types';
 import { AppButton } from '../components';
 import { AppButtonNames } from '../constants';
 import { Colors } from '../utils';
-import { EventSourceManger } from '../appManger';
+import { EventSourceManager } from '../AppManager';
 
 /** Home Screen */
 const HomeScreen = () => {
   const navigation = useNavigation<HomeScreenNavigationProp>();
 
-  /** naviagte to betting screen when click on betting view button */
+  /** navigate to betting screen when click on betting view button */
   const appButtonOnPress = () => {
-    navigation.navigate("Beting")
+    navigation.navigate("Betting")
   }
 
   // close eventSource connection on deactive 
   const closeEventSourceConnection = () => {
-    EventSourceManger.closeRemoveConection();
+    EventSourceManager.closeRemoveConnection();
   }
 
   return (

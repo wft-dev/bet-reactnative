@@ -24,7 +24,7 @@ We are using Server-Sent Events as a convenient way of establishing and handling
 git clone https://github.com/wft-dev/bet-reactnative.git
 cd bet-reactnative
 
-# Install yarna dependencies
+# Install yarn dependencies
 yarn install
 ```
 

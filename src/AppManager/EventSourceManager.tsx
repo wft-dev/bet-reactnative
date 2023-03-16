@@ -1,15 +1,15 @@
 import EventSource, { EventSourceListener, EventSourceOptions } from "react-native-sse";
 
-export class EventSourceManger {
+export class EventSourceManager {
     static eventSource?: EventSource | null;
 
-    // initilaize eventSource with url
+    // initialize eventSource with url
     static init(url: URL | string, options?:EventSourceOptions) {
         this.eventSource = new EventSource(url, options)
     }
 
-    // add all events and retutn handler
-    static getListerner(handler: EventSourceListener) {
+    // add all events and return handler
+    static getListener(handler: EventSourceListener) {
         this.onMessage(handler)
         this.onError(handler)
         this.onOpen(handler)
@@ -26,28 +26,28 @@ export class EventSourceManger {
         this.eventSource?.addEventListener('error', handler);
     }
 
-    // add open event listener that is use for open connectionn
+    // add open event listener that is use for open connection
     static onOpen(handler: EventSourceListener) {
         this.eventSource?.addEventListener('open', handler);
     }
 
-    // add close event listener that is use for close connectionn
+    // add close event listener that is use for close connection
     static onClose(handler: EventSourceListener) {
         this.eventSource?.addEventListener('close', handler);
     }
 
-    // close and remove eventsource
-    static closeRemoveConection() {
+    // close and remove eventSource
+    static closeRemoveConnection() {
         this.close();
         this.onRemoveAllEventListeners();
     }
 
-    // close eventsource
+    // close eventSource
     static close() {
         this.eventSource?.close();
     }
 
-     // open eventsource
+     // open eventSource
      static open() {
         this.eventSource?.open();
     }
