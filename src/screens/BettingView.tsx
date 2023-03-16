@@ -16,7 +16,7 @@ const BettingView = () => {
   const appState = useRef(AppState.currentState);
   // const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
-  // start eventSource and appState 
+  // Start eventSource and appState 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', handler)
     startEventSource()
@@ -26,7 +26,7 @@ const BettingView = () => {
     };
   }, []);
 
-  // appState handler
+  // AppState handler
   const handler = async (nextAppState: AppStateStatus) => {
     if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
       startEventSource()
@@ -37,8 +37,8 @@ const BettingView = () => {
     appState.current = nextAppState;
     // setAppStateVisible(appState.current);
   }
-
-  // get odds api from eventSource and start eventSource
+  
+  // Get odds api from eventSource and start eventSource
   const startEventSource = () => {
     EventSourceManager.init(`${API_URL}${ApiRoot.getOdds}`);
     const listener: EventSourceListener = (event) => {
@@ -56,13 +56,13 @@ const BettingView = () => {
     EventSourceManager.getListener(listener)
   }
 
-  // end eventSource
+  // End eventSource
   const endEventSource = () => {
     EventSourceManager.onRemoveAllEventListeners();
     EventSourceManager.close();
   }
 
-  // set betting data from message event 
+  // Set betting data from message event 
   const setBettingDataFromEvent = (bettingData: BettingData) => {
     setBettings((pervBetting) => {
       const isCarName = pervBetting.some((itemBet) => itemBet.carName === bettingData.carName)
@@ -80,7 +80,7 @@ const BettingView = () => {
     });
   }
 
-  // list of betting cars with name and betting value 
+  // List of betting cars with name and betting value 
   const renderListItems = ({ item }: any) => {
     return (
       <>
@@ -115,7 +115,7 @@ const BettingView = () => {
       <View style={styles.headerContainer}>
         <AppButton style={styles.backAddbtn} textStyle={styles.backAddText} text={AppButtonNames.back} onPress={() => { navigation.goBack() }} />
         <AppButton style={styles.backAddbtn} textStyle={styles.backAddText} text={AppButtonNames.makeBet} onPress={() => {
-          navigation.navigate("MakeBet", {})
+          navigation.navigate("MakeBet")
         }} />
       </View>
       <Text style={styles.demoText}>{AppText.demoRaceText}</Text>

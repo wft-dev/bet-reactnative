@@ -17,7 +17,7 @@ const MakeBet = () => {
   const [betPrice, onChangeBetPrice] = useState('');
   const [isLoading, setIsLoding] = useState(false);
 
-  // alert message for betting success
+  // Alert message for betting success
   const addBettingAlert = () =>
     Alert.alert(AppAlertText.betTitle, AppAlertText.makeBetMesaage, [
       {
@@ -25,7 +25,7 @@ const MakeBet = () => {
       },
     ]);
 
-  // alert message for validation
+  // Alert message for validation
   const validation = () => {
     if (!carName) {
       Alert.alert(AppAlertText.alertTitle, AppAlertText.carNameMessage);
@@ -36,7 +36,7 @@ const MakeBet = () => {
     }
     return false
   }
-  // call make bet api
+  // Call make bet api
   const makeBetApi = async () => {
     Keyboard.dismiss()
     if (validation()) {

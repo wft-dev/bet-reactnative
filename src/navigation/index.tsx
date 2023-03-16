@@ -11,7 +11,7 @@ const MyTheme = {
   },
 };
 
-/** navigation root */
+/** Navigation root */
 const RootNavigator = () => {
   return (
     <NavigationContainer theme={MyTheme}>
